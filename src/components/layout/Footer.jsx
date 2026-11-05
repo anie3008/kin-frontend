@@ -15,8 +15,8 @@ export default function Footer() {
 
         {/* Brand */}
         <div>
-          <Link href="/" className="text-2xl font-bold text-(--primary)">
-            kin<span className="text-(--secondary)">.</span>
+          <Link href="/" className="text-2xl font-bold text-[#a37803]">
+            kin<span className="text-[#466060]">.</span>
           </Link>
 
           <p className="mt-4 max-w-xs text-sm leading-6 text-(--muted)">

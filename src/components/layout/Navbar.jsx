@@ -23,8 +23,8 @@ export default function Navbar() {
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
                 {/* Logo */}
-                <Link href="/" className="text-2xl font-bold tracking-tight text-(--primary)">
-                    kin<span className="text-[#F4C542]">.</span>
+                <Link href="/" className="text-2xl font-bold tracking-tight text-[#a37803]">
+                    kin<span className="text-[#466060]">.</span>
                 </Link>
 
                 {/* Desktop navigation */}
