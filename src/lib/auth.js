@@ -14,10 +14,10 @@ export const auth = betterAuth({
   },
 
   socialProviders: {
-        google: { // [!code highlight]
-            clientId: process.env.GOOGLE_CLIENT_ID, // [!code highlight]
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET, // [!code highlight]
-        }, // [!code highlight]
+        github: { 
+            clientId: process.env.GITHUB_CLIENT_ID, 
+            clientSecret: process.env.GITHUB_CLIENT_SECRET, 
+        }, 
     },
 
 });
