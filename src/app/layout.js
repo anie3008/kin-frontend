@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Footer from "@/components/layout/Footer";
+import { ToastContainer } from "react-toastify";
 
 const inter= Inter({
   variable: "--font-geist-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
         <Navbar />
         {children}
+        <ToastContainer />
         <Footer />
         </ThemeProvider>
       </body>
