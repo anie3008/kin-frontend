@@ -1,4 +1,5 @@
-
+"use client"
+import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 
 const EventDetailsCard = ({ event }) => {
@@ -14,7 +15,10 @@ const EventDetailsCard = ({ event }) => {
     creatorImage,
   } = event;
 
-  const formattedDate = new Date(
+   const { data: session, isPending } = authClient.useSession();
+   const user = session?.user;
+  
+const formattedDate = new Date(
     `${eventDate}T00:00:00`
   ).toLocaleDateString("en-BD", {
     day: "numeric",
@@ -30,6 +34,34 @@ const EventDetailsCard = ({ event }) => {
     "community-support": "Community Support",
     other: "Other",
   };
+const handleJoin = async (e) => {
+e.preventDefault()
+
+ if (!user) {
+        alert("Please login to join this event");
+        return;
+    }
+
+    const data = {
+  name: user?.name,
+  image:user?.image,
+  email:user?.email,
+  id:user?.id,
+  ...event,}
+
+
+const res = await fetch("http://localhost:8000/joined-event",{
+  method: "POST",
+  headers: {
+    'content-Type' : 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+const joinedEvent = await res.json()
+console.log(joinedEvent)
+} 
+
+
 
   return (
     <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -133,20 +165,23 @@ const EventDetailsCard = ({ event }) => {
                   {creatorEmail || "Email not available"}
                 </p>
               </div>
+
             </div>
           </div>
 
         </div>
 
         {/* Join Button */}
-        <div className="mt-10 border-t border-gray-200 pt-6">
+       
+          <form onSubmit={handleJoin} className="mt-10 border-t border-gray-200 pt-6">
           <button
-            type="button"
+            type="submit"
             className="w-full rounded-xl bg-[#466060] px-6 py-3.5 font-semibold text-white transition hover:bg-[#354c4c] active:scale-[0.99] sm:w-auto"
           >
             Join This Event
           </button>
-        </div>
+          </form>
+        
 
       </div>
     </div>

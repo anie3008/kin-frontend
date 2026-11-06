@@ -1,4 +1,5 @@
 import EventCard from "@/components/events/EventCard";
+import Link from "next/link";
 
 const UpcomingEvents = async () => {
   let events = [];
@@ -50,12 +51,12 @@ const UpcomingEvents = async () => {
 
       {/* View all events */}
       <div className="mt-10 text-center">
-        <a
-          href="/events"
+        <Link
+        href="/events"
           className="inline-block rounded-lg border border-[#466060] px-6 py-3 font-semibold text-[#466060] transition hover:bg-[#466060] hover:text-white"
         >
           Explore All Events →
-        </a>
+        </Link>
       </div>
     </section>
   );

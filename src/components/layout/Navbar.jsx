@@ -2,129 +2,236 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { authClient } from "@/lib/auth-client";
 
 export default function Navbar() {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const { theme, toggleTheme } = useTheme();
+    const { data: session, isPending } = authClient.useSession();
 
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Events", href: "/events" },
         { name: "Create Event", href: "/create-event" },
+        { name: "Joined Events", href: "/joined-events" },
+        { name: "Manage Events", href: "/manage-events" },
     ];
 
+    const handleLogout = async () => {
+        await authClient.signOut();
+        setIsMenuOpen(false);
+    };
+
     return (
-        <header className="sticky top-0 z-50 border-b border-(--border) bg(--surface)">
+        <header className="sticky top-0 z-50 border-b border-(--border) bg-(--surface)">
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
                 {/* Logo */}
-                <Link href="/" className="text-2xl font-bold tracking-tight text-[#a37803]">
+                <Link
+                    href="/"
+                    className="text-2xl font-bold tracking-tight text-[#a37803]"
+                >
                     kin<span className="text-[#466060]">.</span>
                 </Link>
 
-                {/* Desktop navigation */}
+                {/* Desktop Navigation */}
                 <div className="hidden items-center gap-8 md:flex">
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`text-sm font-medium transition-colors hover:text-(--primary) ${pathname === link.href
-                                ? "text-(--primary)"
-                                : "text-(--muted)"
-                                }`}
+                            className={`text-sm font-medium transition-colors hover:text-(--primary) ${
+                                pathname === link.href
+                                    ? "text-(--primary)"
+                                    : "text-(--muted)"
+                            }`}
                         >
                             {link.name}
                         </Link>
                     ))}
                 </div>
 
-                {/* Desktop actions */}
-                <div className="hidden items-center gap-3 md:flex">
+                {/* Desktop Actions */}
+                <div className="hidden items-center gap-4 md:flex">
 
+                    {/* Theme Toggle */}
                     <button
                         onClick={toggleTheme}
                         aria-label="Toggle theme"
-                        className="rounded-lg p-2 text-foreground hover:bg-background)"
+                        className="rounded-lg p-2 hover:bg-(--background)"
                     >
-                        {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+                        {theme === "light" ? (
+                            <Moon size={20} />
+                        ) : (
+                            <Sun size={20} />
+                        )}
                     </button>
 
-                    <Link
-                        href="/login"
-                        className="rounded-lg px-4 py-2 text-sm font-medium text-foreground transition hover:bg-background"
-                    >
-                        Login
-                    </Link>
+                    {/* Authentication */}
+                    {isPending ? (
+                        <p>Loading...</p>
+                    ) : session?.user ? (
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                {session.user.image ? (
+                                    <Image
+                                        src={session.user.image}
+                                        alt={session.user.name || "Profile"}
+                                        width={40}
+                                        height={40}
+                                        unoptimized
+                                        className="h-10 w-10 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#466060] font-semibold text-white">
+                                        {session.user.name?.charAt(0).toUpperCase() || "U"}
+                                    </div>
+                                )}
 
-                    <Link
-                        href="/register"
-                        className="rounded-lg bg-(--primary) px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#174F4B]"
-                    >
-                        Get Started
-                    </Link>
+                                <div>
+                                    <p className="text-sm font-semibold">
+                                        {session.user.name}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                        {session.user.email}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleLogout}
+                                className="rounded-lg bg-[#466060] px-4 py-2 text-white hover:bg-[#354c4c]"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <Link href="/login">Sign In</Link>
+
+                            <Link
+                                href="/register"
+                                className="rounded-lg bg-[#466060] px-4 py-2 text-white"
+                            >
+                                Register
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
-                {/* Mobile menu button */}
+                {/* Mobile Menu Button */}
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="rounded-lg p-2 text-foreground md:hidden"
+                    className="md:hidden"
                     aria-label="Toggle navigation menu"
-                    aria-expanded={isMenuOpen}
                 >
                     {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
+
             </nav>
 
-            {/* Mobile navigation */}
+            {/* Mobile Navigation */}
             {isMenuOpen && (
-                <div className="border-t border-(--border) bg-(--surface) px-6 py-4 md:hidden">
+                <div className="border-t border-(--border) px-6 py-5 md:hidden">
+
+                    {/* Mobile Navigation Links */}
                     <div className="flex flex-col gap-4">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setIsMenuOpen(false)}
-                                className={`text-sm font-medium ${pathname === link.href
-                                    ? "text-primary"
-                                    : "text-muted"
-                                    }`}
+                                className={`text-sm font-medium ${
+                                    pathname === link.href
+                                        ? "text-(--primary)"
+                                        : "text-(--muted)"
+                                }`}
                             >
                                 {link.name}
                             </Link>
                         ))}
+                    </div>
 
-                        <div className="flex gap-3 border-t border-(--border)pt-4">
+                    {/* Mobile Actions */}
+                    <div className="mt-5 flex flex-col gap-4 border-t border-(--border) pt-4">
 
-                            <button
-                                onClick={toggleTheme}
-                                aria-label="Toggle theme"
-                                className="rounded-lg p-2 text-foreground hover:bg-background)"
-                            >
-                                {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-                            </button>
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            aria-label="Toggle theme"
+                            className="self-start rounded-lg p-2 hover:bg-background"
+                        >
+                            {theme === "light" ? (
+                                <Moon size={20} />
+                            ) : (
+                                <Sun size={20} />
+                            )}
+                        </button>
 
-                            <Link
-                                href="/login"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="flex-1 rounded-lg border border-(--border) py-2 text-center text-sm"
-                            >
-                                Login
-                            </Link>
+                        {/* Mobile Authentication */}
+                        {isPending ? (
+                            <p className="text-sm">Loading...</p>
+                        ) : session?.user ? (
+                            <>
+                                <div className="flex items-center gap-3">
+                                    {session.user.image ? (
+                                        <Image
+                                            src={session.user.image}
+                                            alt={session.user.name || "Profile"}
+                                            width={40}
+                                            height={40}
+                                            unoptimized
+                                            className="h-10 w-10 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#466060] font-semibold text-white">
+                                            {session.user.name?.charAt(0).toUpperCase() || "U"}
+                                        </div>
+                                    )}
 
-                            <Link
-                                href="/register"
-                                onClick={() => setIsMenuOpen(false)}
-                                className="flex-1 rounded-lg bg-(--primary) py-2 text-center text-sm text-white"
-                            >
-                                Get Started
-                            </Link>
+                                    <div className="min-w-0">
+                                        <p className="truncate text-sm font-semibold">
+                                            {session.user.name}
+                                        </p>
+                                        <p className="truncate text-xs text-(--muted)">
+                                            {session.user.email}
+                                        </p>
+                                    </div>
+                                </div>
 
-                        </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full rounded-lg bg-(--primary) py-2 text-sm text-white"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <div className="flex gap-3">
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex-1 rounded-lg border border-(--border) py-2 text-center text-sm"
+                                >
+                                    Login
+                                </Link>
+
+                                <Link
+                                    href="/register"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex-1 rounded-lg bg-(--primary) py-2 text-center text-sm text-white"
+                                >
+                                    Get Started
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

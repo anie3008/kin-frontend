@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Footer from "@/components/layout/Footer";
 import { ToastContainer } from "react-toastify";
+import { AuthClient } from "better-auth/client";
 
 const inter= Inter({
   variable: "--font-geist-sans",
@@ -26,7 +27,11 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
         <Navbar />
         {children}
-        <ToastContainer />
+         <ToastContainer
+                    position="top-middle"
+                    autoClose={3000}
+                    theme="colored"
+                />
         <Footer />
         </ThemeProvider>
       </body>

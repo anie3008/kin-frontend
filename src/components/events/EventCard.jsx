@@ -20,7 +20,7 @@ const EventCard = ({ event }) => {
     month: "short",
     year: "numeric",
   });
-
+  
   const categoryLabels = {
     cleanup: "Cleanup",
     plantation: "Plantation",
@@ -59,7 +59,7 @@ const EventCard = ({ event }) => {
       </div>
 
       {/* Content */}
-      <div className="flex min-h-[250px] flex-col p-5">
+      <div className="flex min-h-62.5 flex-col p-5">
 
         {/* Title */}
         <h2 className="mb-2 line-clamp-1 text-xl font-bold text-[#263b3b] transition-colors group-hover:text-[#466060]">
