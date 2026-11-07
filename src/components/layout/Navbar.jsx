@@ -65,7 +65,7 @@ export default function Navbar() {
                     <button
                         onClick={toggleTheme}
                         aria-label="Toggle theme"
-                        className="rounded-lg p-2 hover:bg-(--background)"
+                        className="rounded-lg p-2 hover:bg-background"
                     >
                         {theme === "light" ? (
                             <Moon size={20} />
