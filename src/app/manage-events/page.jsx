@@ -31,16 +31,12 @@ const ManageEventsPage = () => {
 
   // Fetch events created by the logged-in user
   useEffect(() => {
-    if (isPending) return;
+    if (isPending|| !session?.user?.email) return;
 
-    if (!session?.user?.email) {
-      setLoading(false);
-      return;
-    }
+   
 
     const fetchMyEvents = async () => {
       try {
-        setLoading(true);
         setError("");
 
         const response = await fetch(

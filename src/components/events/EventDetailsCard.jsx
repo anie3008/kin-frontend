@@ -1,6 +1,7 @@
 "use client"
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
+import { toast } from "react-toastify";
 
 const EventDetailsCard = ({ event }) => {
   const {
@@ -38,7 +39,7 @@ const handleJoin = async (e) => {
 e.preventDefault()
 
  if (!user) {
-        alert("Please login to join this event");
+        toast.info("Please login to join this event");
         return;
     }
 
@@ -58,7 +59,6 @@ const res = await fetch("http://localhost:8000/joined-event",{
   body: JSON.stringify(data)
 })
 const joinedEvent = await res.json()
-console.log(joinedEvent)
 } 
 
 

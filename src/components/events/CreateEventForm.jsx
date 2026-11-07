@@ -6,6 +6,7 @@ import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 
 const eventCategories = [
@@ -84,14 +85,13 @@ const CreateEventForm = () => {
             throw new Error(data.message || "Failed to create event");
         }
 
-        alert("Event created successfully!");
+        toast.success("Event created successfully!");
 
         form.reset();
 
         router.push("/manage-events");
 
-        console.log(data);
-        console.log(user);
+        
         // Next step: Connect this form to our Express API.
     };
 
