@@ -2,6 +2,7 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
+import { clientToken } from "@/lib/clientToken";
 import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,6 +10,8 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 
+const API_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL
 const eventCategories = [
     { value: "cleanup", label: "Cleanup" },
     { value: "plantation", label: "Plantation" },
@@ -72,17 +75,21 @@ const CreateEventForm = () => {
             setError("Please select a future event date.");
             return;
         }
-        const res = await fetch("http://localhost:8000/create-event", {
+     const token = await clientToken()
+     
+
+        const res = await fetch(`${API_URL}/create-event`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                authorization: `Bearer ${token}`
             },
             body: JSON.stringify({ ...eventData, creatorEmail: user.email,creatorName:user.name,creatorImage:user.image}),
         });
-        const data = await res.json()
+        const result = await res.json()
 
         if (!res.ok) {
-            throw new Error(data.message || "Failed to create event");
+            throw new Error(result.message || "Failed to create event");
         }
 
         toast.success("Event created successfully!");

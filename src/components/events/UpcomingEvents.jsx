@@ -1,12 +1,13 @@
 import EventCard from "@/components/events/EventCard";
 import Link from "next/link";
 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL
 const UpcomingEvents = async () => {
   let events = [];
 
   try {
     const res = await fetch(
-      "http://localhost:8000/events?limit=6",
+      `${API_URL}/events`,
       { cache: "no-store" }
     );
 
@@ -52,7 +53,7 @@ const UpcomingEvents = async () => {
       {/* View all events */}
       <div className="mt-10 text-center">
         <Link
-        href="/events"
+          href="/events"
           className="inline-block rounded-lg border border-[#466060] px-6 py-3 font-semibold text-[#466060] transition hover:bg-[#466060] hover:text-white"
         >
           Explore All Events →

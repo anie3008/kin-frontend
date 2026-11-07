@@ -6,10 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "react-toastify";
+import { clientToken } from "@/lib/clientToken";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
-
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 const EditEventPage = () => {
   const { id } = useParams();
   const router = useRouter();
@@ -27,7 +26,12 @@ const EditEventPage = () => {
 
     const fetchEvent = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/events/${id}`);
+        const token = await clientToken()
+        const response = await fetch(`${API_URL}/events/${id}`,{
+          headers: {
+      authorization: `Bearer ${token}`
+    }
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch event");
@@ -50,7 +54,7 @@ const EditEventPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
+
 
     const formData = new FormData(e.currentTarget);
     const formValues = Object.fromEntries(formData.entries());
@@ -60,7 +64,7 @@ const EditEventPage = () => {
       setError("");
 
       const response = await fetch(
-        `http://localhost:8000/edit-event/${id}`,
+        `${API_URL}/edit-event/${id}`,
         {
           method: "PATCH",
           headers: {

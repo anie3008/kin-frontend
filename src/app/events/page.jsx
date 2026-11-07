@@ -2,17 +2,17 @@ import EventCard from '@/components/events/EventCard';
 import Link from 'next/link';
 import React from 'react';
 
-const AllEventsPage = async() => {
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL
+const AllEventsPage = async () => {
+  const res = await fetch(`${API_URL}/events`)
+  const data = await res.json()
 
-const res = await fetch('http://localhost:8000/events')
-const data = await res.json()
- 
   const categories = ['All', ...new Set(data.map((event) => event.category).filter(Boolean))];
 
-    return (
+  return (
 
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-      
+    <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100 pb-6">
         <div>
@@ -35,11 +35,11 @@ const data = await res.json()
             />
           </div>
           {/* Create Event Button */}
-         <Link href={'/create-event'}>
-          <button className="whitespace-nowrap  bg-[#466060] hover:hover:bg-[#354c4c] text-white px-4 py-2 rounded-xl font-medium text-sm transition-colors">
-            Create Event
-          </button>
-         </Link>
+          <Link href={'/create-event'}>
+            <button className="whitespace-nowrap  bg-[#466060] hover:hover:bg-[#354c4c] text-white px-4 py-2 rounded-xl font-medium text-sm transition-colors">
+              Create Event
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -58,16 +58,16 @@ const data = await res.json()
         ))}
       </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-  {data.map((event) => (
-    <EventCard
-      key={event._id}
-      event={event}
-    />
-  ))}
-</div>
-</div>
-    );
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {data.map((event) => (
+          <EventCard
+            key={event._id}
+            event={event}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default AllEventsPage;

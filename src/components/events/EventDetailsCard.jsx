@@ -3,6 +3,7 @@ import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL
 const EventDetailsCard = ({ event }) => {
   const {
     title,
@@ -50,11 +51,13 @@ e.preventDefault()
   id:user?.id,
   ...event,}
 
+  const token = await clientToken()
 
-const res = await fetch("http://localhost:8000/joined-event",{
+const res = await fetch(`${API_URL}/joined-event`,{
   method: "POST",
   headers: {
-    'content-Type' : 'application/json'
+    'content-Type' : 'application/json',
+    authorization: `Bearer ${token}`
   },
   body: JSON.stringify(data)
 })

@@ -12,7 +12,7 @@ import {
 
 
 const API_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:8000";
+  process.env.NEXT_PUBLIC_SERVER_URL;
 
 const categoryLabels = {
   donation: "Donation",
