@@ -1,7 +1,12 @@
 
 "use client";
 
+import { useSession } from "@/lib/auth-client";
+import { LoaderCircle } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 
 const eventCategories = [
     { value: "cleanup", label: "Cleanup" },
@@ -24,7 +29,7 @@ const getMinDate = () => {
 };
 
 const CreateEventForm = () => {
-    const [formData, setFormData] = useState({
+    const [eventData, setFormData] = useState({
         title: "",
         category: "",
         description: "",
@@ -32,7 +37,7 @@ const CreateEventForm = () => {
         location: "",
         eventDate: "",
     });
-
+    const router = useRouter();
     const [error, setError] = useState("");
 
     const minDate = getMinDate();
@@ -47,11 +52,22 @@ const CreateEventForm = () => {
 
         setError("");
     };
+    const { data: session, isPending } = useSession();
+    if (isPending)
+        return (
+            <div className="flex justify-center items-center h-[45vh]">
+                <LoaderCircle />
+            </div>
+        )
+    const { user } = session;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const form = e.currentTarget;
+        const formData = new FormData(form)
+        const eventData = Object.fromEntries(formData.entries())
 
-        if (formData.eventDate < getMinDate()) {
+        if (eventData.eventDate < getMinDate()) {
             setError("Please select a future event date.");
             return;
         }
@@ -60,11 +76,22 @@ const CreateEventForm = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({ ...eventData, creatorEmail: user.email,creatorName:user.name,creatorImage:user.image}),
         });
         const data = await res.json()
-        console.log(data);
 
+        if (!res.ok) {
+            throw new Error(data.message || "Failed to create event");
+        }
+
+        alert("Event created successfully!");
+
+        form.reset();
+
+        router.push("/manage-events");
+
+        console.log(data);
+        console.log(user);
         // Next step: Connect this form to our Express API.
     };
 
@@ -90,7 +117,7 @@ const CreateEventForm = () => {
                     id="title"
                     name="title"
                     placeholder="e.g. Community Tree Plantation"
-                    value={formData.title}
+                    value={eventData.title}
                     onChange={handleChange}
                     className={inputStyle}
                     required
@@ -106,7 +133,7 @@ const CreateEventForm = () => {
                 <select
                     id="category"
                     name="category"
-                    value={formData.category}
+                    value={eventData.category}
                     onChange={handleChange}
                     className={inputStyle}
                     required
@@ -134,7 +161,7 @@ const CreateEventForm = () => {
                     name="description"
                     rows="5"
                     placeholder="Describe your event, its purpose, and how people can participate..."
-                    value={formData.description}
+                    value={eventData.description}
                     onChange={handleChange}
                     className={`${inputStyle} resize-y`}
                     required
@@ -152,22 +179,24 @@ const CreateEventForm = () => {
                     id="thumbnail"
                     name="thumbnail"
                     placeholder="https://example.com/image.jpg"
-                    value={formData.thumbnail}
+                    value={eventData.thumbnail}
                     onChange={handleChange}
                     className={inputStyle}
                     required
                 />
 
                 {/* Image Preview */}
-                {formData.thumbnail && (
+                {eventData.thumbnail && (
                     <div className="mt-4">
                         <p className="mb-2 text-sm font-medium text-gray-500">
                             Image Preview
                         </p>
 
-                        <img
-                            src={formData.thumbnail}
+                        <Image
+                            src={eventData.thumbnail}
                             alt="Event thumbnail preview"
+                            width={600}
+                            height={400}
                             className="h-48 w-full rounded-lg border object-cover"
                             onError={(e) => {
                                 e.currentTarget.style.display = "none";
@@ -191,7 +220,7 @@ const CreateEventForm = () => {
                     id="location"
                     name="location"
                     placeholder="e.g. Dhanmondi, Dhaka"
-                    value={formData.location}
+                    value={eventData.location}
                     onChange={handleChange}
                     className={inputStyle}
                     required
@@ -209,7 +238,7 @@ const CreateEventForm = () => {
                     id="eventDate"
                     name="eventDate"
                     min={minDate}
-                    value={formData.eventDate}
+                    value={eventData.eventDate}
                     onChange={handleChange}
                     className={inputStyle}
                     required

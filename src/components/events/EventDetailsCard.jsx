@@ -25,7 +25,7 @@ const formattedDate = new Date(
     month: "long",
     year: "numeric",
   });
-
+console.log(event);
   const categoryLabels = {
     cleanup: "Cleanup",
     plantation: "Plantation",
