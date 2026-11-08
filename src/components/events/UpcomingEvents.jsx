@@ -44,7 +44,7 @@ const UpcomingEvents = async () => {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {events.map((event) => (
+          {events.slice(0, 6).map((event) => (
             <EventCard key={event._id} event={event} />
           ))}
         </div>

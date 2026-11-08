@@ -64,7 +64,7 @@ export default function FeaturesSection() {
                 key={feature.title}
                 className="rounded-2xl border border-(--border) bg-(--surface) p-6 transition hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-(--background) text-(--primary)">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-background text-(--primary)">
                   <Icon size={25} />
                 </div>
 
