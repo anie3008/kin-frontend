@@ -2,7 +2,7 @@
 
 **Kin** is a community-driven event management platform designed to bring people together through social service and community activities in Bangladesh. It allows people to discover local events, participate in meaningful initiatives, and organize activities that make a positive difference in their communities.
 
-🌐 **Live Website:** [Add Your Live Site URL Here]
+🌐 **Live Website:** https://kin-frontend-zvg3.vercel.app
 
 ## Features
 
