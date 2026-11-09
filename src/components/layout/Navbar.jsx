@@ -79,7 +79,7 @@ export default function Navbar() {
                         <p>Loading...</p>
                     ) : session?.user ? (
                         <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-3">
+                            <div className="relative group flex items-center gap-3">
                                 {session.user.image ? (
                                     <Image
                                         src={session.user.image}
@@ -95,7 +95,7 @@ export default function Navbar() {
                                     </div>
                                 )}
 
-                                <div>
+                                <div  className="absolute right-0 top-full z-50 mt-2 hidden w-56 rounded-lg border border-gray-100 bg-white p-3 shadow-lg group-hover:block">
                                     <p className="text-sm font-semibold">
                                         {session.user.name}
                                     </p>

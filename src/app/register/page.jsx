@@ -40,7 +40,13 @@ const RegisterPage = () => {
       setError("Password must be at least 8 characters.");
       return;
     }
+    if (!/[A-Z]/.test(password)) {
+    return alert("Password must contain at least one uppercase letter");
+  }
 
+  if (!/[0-9]/.test(password)) {
+    return alert("Password must contain at least one number");
+  }
     try {
       setLoading(true);
 
@@ -56,7 +62,7 @@ const RegisterPage = () => {
         setError(authError.message || "Registration failed.");
         return;
       }
-
+toast.success("Account created successfully! Welcome to Kin 🎉");
       router.push("/");
       router.refresh();
     } catch (err) {

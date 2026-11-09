@@ -45,7 +45,7 @@ const LoginPage = () => {
         setError(authError.message || "Invalid email or password.");
         return;
       }
-
+toast.success("Log in successfully! Welcome to Kin 🎉");
       router.push("/");
       router.refresh();
     } catch (err) {
